@@ -1,13 +1,15 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String
+from sqlalchemy import Column, Integer, String, create_engine, ForeignKey
 from os import getenv
-from sqlalchemy import create_engine
 from sqlalchemy_utils import database_exists, create_database
+from sqlalchemy.orm import sessionmaker, relationship
 
 engine = create_engine(getenv("DATABASE"))
 if not database_exists(engine.url):
     create_database(engine.url)
 
+Session = sessionmaker(bind=engine)
+session = Session()
 Base = declarative_base()
 
 
@@ -40,11 +42,25 @@ class Post(Base):
     __tablename__ = 'posts'
     id = Column(Integer, primary_key=True)
     title = Column(String)
+    date = Column(String)
+    updated = Column(Integer)
     text = Column(String)
-    author = Column(String)
+    user_id = Column(Integer, ForeignKey('users.id'))
+    user = relationship("User", back_populates="posts")
     post_type = Column(Integer)
     system = Column(Integer)
     game = Column(Integer)
     score = Column(Integer)
     num_comments = Column(Integer)
     link = Column(String)
+    r_id = Column(Integer)
+
+
+class User(Base):
+    __tablename__ = 'users'
+    id = Column(Integer, primary_key=True)
+    name = Column(String)
+    posts = relationship("Post", back_populates="user")
+
+
+Base.metadata.create_all(engine)
