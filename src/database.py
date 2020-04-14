@@ -1,5 +1,5 @@
 from sqlalchemy.ext.declarative import declarative_base
-from sqlalchemy import Column, Integer, String, create_engine, ForeignKey
+from sqlalchemy import Column, Integer, String, create_engine
 from os import getenv
 from sqlalchemy_utils import database_exists, create_database
 from sqlalchemy.orm import sessionmaker, relationship
@@ -38,15 +38,24 @@ class Game:
     UNSPECIFIEDD = 5
 
 
+class Sub:
+    DARKSOULS = 0
+    DARKSOULS2 = 1
+    DARKSOULS3 = 2
+    ONEBROS = 3
+    DARKSOULSHELP = 4
+    DARKSOULSPVP = 5
+    SUMMONSIGN = 6
+
+
 class Post(Base):
     __tablename__ = 'posts'
     id = Column(Integer, primary_key=True)
     title = Column(String)
     date = Column(String)
     updated = Column(Integer)
-    text = Column(String)
-    user_id = Column(Integer, ForeignKey('users.id'))
-    user = relationship("User", back_populates="posts")
+    user_id = Column(Integer)
+    username = Column(String)
     post_type = Column(Integer)
     system = Column(Integer)
     game = Column(Integer)
@@ -54,13 +63,14 @@ class Post(Base):
     num_comments = Column(Integer)
     link = Column(String)
     r_id = Column(Integer)
+    sub_id = Column(Integer)
 
 
 class User(Base):
     __tablename__ = 'users'
     id = Column(Integer, primary_key=True)
     name = Column(String)
-    posts = relationship("Post", back_populates="user")
+    # posts = relationship("Post", back_populates="user")
 
 
 Base.metadata.create_all(engine)
