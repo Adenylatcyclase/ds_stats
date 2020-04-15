@@ -4,6 +4,7 @@ from database import Post, session
 from datetime import date
 from time import time
 from sqlalchemy.sql.expression import func
+import base36
 
 subreddit_list = [
     ("darksouls", 0),
@@ -25,7 +26,7 @@ def fetch_last(sub_id):
 
 
 def fetch_x_days(sub, sub_id, last=None):
-    param = {"before": f"t3_{last}"} if last is not None else {}
+    param = {"before": f"t3_{base36.dumps(last)}"} if last is not None else {}
     i = 0
 
     for s in reddit.subreddit(sub).new(limit=1000, params=param):

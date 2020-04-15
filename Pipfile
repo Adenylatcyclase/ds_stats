@@ -11,6 +11,7 @@ click = "*"
 sqlalchemy = "*"
 sqlalchemy-utils = "*"
 praw = "*"
+base36 = "*"
 
 [requires]
 python_version = "3.8"
